@@ -37,7 +37,7 @@ export default class menu extends Phaser.Scene
             this.scene.launch(this.microgames[this.microgameIndex]);
             this.scene.launch('timer');
             this.scene.sleep(this.scene.key);
-            
+                        
             this.instructionText.setColor('#ff0000');    
         });
 
