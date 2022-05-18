@@ -16,113 +16,39 @@ export default class menu extends Phaser.Scene
     // queue assets to load
     preload()
     {
-        
+        this.load.image('popup', 'assets/250x70.png');
+        this.load.audio('appear', 'assets/popup-appear.wav');
+        this.load.spine('medal', 'assets/skeleton.json', 'assets/skeleton.atlas');
     }
 
     create()
     {   
-        this.instructionText = this.add.text(0, -30, 'microgame', {fontSize: 32});
-        this.instructionText.setOrigin(0.5, 0.5);
+        this.scene.launch('newgroundsio');
+        
+        this.medal = this.add.spine(835, 505, 'medal', 'animation');
 
-            // MICROGAMES
+        this.graphic1 = this.add.graphics({ x: 0, y: 0});
+        this.graphic1.fillStyle(0x999999, 1);
+        this.graphic1.fillRect(0, 0, 710, 540);
+        this.graphic1.fillRect(0, 0, 960, 470);
 
-        /** scene key / name for microgames */
-        this.microgames = ['zone', 'pool', 'svg', 'tilemap', 'icebreaker', 'runner', 'spine']
-        this.microgameIndex = 0;
+        this.appear = this.sound.add('appear');
 
-            // MENU BUTTONS
+        // this.add.image(300, 300, 'popup').setMask(this.mask).setOrigin(0, 0);
 
-        this.createButton(-60, 10, 220, 100, 'PLAY').on('pointerdown', () => {
-
-            this.scene.launch(this.microgames[this.microgameIndex]);
-            this.scene.launch('timer');
-            this.scene.sleep(this.scene.key);
-                        
-            this.instructionText.setColor('#ff0000');    
+        this.input.keyboard.on('keydown-Z', () => {
+            this.medal.setAnimation(0, 'animation', false);
+            this.appear.play();
         });
 
-        this.createButton(200, 10, 100, 100, '>').on('pointerdown', () => {
-
-            this.updateSelection(true);
+        this.input.keyboard.on('keydown-X', () => {
+            this.medal.setAnimation(0, 'animation-2', false);
+            this.appear.play();
         });
-
-        this.createButton(-200, 10, 100, 100, '<').on('pointerdown', () => {
-
-            this.updateSelection(false);
-        });
-
-        // this.input.on('pointerdown', () => {
-
-        //     this.scene.launch('icebreaker');
-        //     this.scene.launch('timer');
-        //     this.scene.sleep(this.scene.key);
-            
-        //     this.instructionText.setColor('#ff0000');
-        // });
-
-        eventsCenter.on('win', () =>
-        {
-            this.instructionText.setColor('#00ff00');
-        });
-
-        eventsCenter.on('resize', () => {
-
-            this.resizeScene();
-        });
-
-        this.cameras.main.centerOn(0, 0);
     }
 
     update()
     {
         
-    }
-
-    updateSelection(next)
-    {
-        this.microgameIndex += (next? 1 : -1);
-        
-            // wrap array index
-        if (this.microgameIndex == -1)
-        {
-            this.microgameIndex = this.microgames.length -1;
-        }
-        if (this.microgameIndex == this.microgames.length)
-        {
-            this.microgameIndex = 0;
-        }
-
-        this.instructionText.text = 'microgame: ' + this.microgames[this.microgameIndex];
-    }
-
-    resizeScene()
-    {
-        this.cameras.main.centerOn(0, 0);
-    }
-
-    createButton(x, y, w, h, label)
-    {
-        this.graphics = this.add.graphics();
-        this.graphics.fillRoundedRect(0, 0, w, h, this.roundedCorners ? 15 : 0);
-        this.graphics.fillStyle(0x3399ff);
-        this.label = this.add.text(0, 0, label, {color: 'white', fontSize: '25px'});
-        
-        this.container = this.add.container(x, y, [this.graphics, this.label]);
-        this.container.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-        // this.container.on('pointerdown', () => {
-
-        //     this.graphics.fillStyle(0x80bfff);
-        // })
-        // this.container.on('pointerup', () => {
-
-        //     this.graphics.fillStyle(0x3399ff);
-        //     // FIXME - this only effects the first button
-
-        //     this.startScene(_questionIndex);
-        // })
-
-        this.label.setPosition(10, 10);
-
-        return this.container;
     }
 }

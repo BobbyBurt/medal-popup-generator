@@ -23,10 +23,7 @@ export default class newgroundsio extends Phaser.Scene
     {
         initSession();
 
-        /* load our medals and scoreboards from the server */
-        ngio.queueComponent("Medal.getList", {}, onMedalsLoaded);
-        ngio.queueComponent("ScoreBoard.getBoards", {}, onScoreboardsLoaded);
-        // ngio.queueComponent("App.logView", {host: 'localHost'});
+        ngio.queueComponent("App.logView", {host: 'localHost'});
         ngio.executeQueue();
     }
 
